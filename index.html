@@ -1,6 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MUST Calculator — Amputation-Adjusted</title>
+
+<style>
+:root {
+  --bg: #ffffff;
+  --text: #111111;
+  --accent: #0057ff;
+  --accent-dark: #003bb8;
+  --card-bg: #f2f5ff;
+  --border: #d0d7ff;
+
+  --font-large: 1.15rem;
+  --font-med: 1.05rem;
+}
+
+body {
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  margin: 22px;
+  max-width: 760px;
+  color: var(--text);
+  background: var(--bg);
+  font-size: var(--font-med);
+  line-height: 1.55;
+  padding-bottom: 40px;
+}
+
+h1 {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  color: var(--accent-dark);
+}
+
+label {
+  display: block;
+  font-weight: 600;
+  margin-top: 16px;
+  font-size: var(--font-large);
+}
+
+input, select {
+  padding: 14px;
+  margin-top: 6px;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: var(--font-med);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+}
+
+button {
+  margin-top: 18px;
+  padding: 16px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  width: 100%;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+button:active {
+  background: var(--accent-dark);
+}
+
+.result {
+  background: var(--card-bg);
+  padding: 18px;
+  margin-top: 20px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  font-size: var(--font-large);
+}
+
+.result strong {
+  color: var(--accent-dark);
+}
+
+hr {
+  margin: 16px 0;
+  border: 0;
+  border-top: 2px solid var(--border);
+}
+
+.cite {
+  margin-top: 20px;
+  font-size: 0.85rem;
+  color: #444;
+}
+
+/* Mobile readability tweaks */
+@media (max-width: 500px) {
+  body { margin: 16px; }
+  h1 { font-size: 1.6rem; }
+  button { font-size: 1.1rem; }
+  label { font-size: 1.1rem; }
+}
+</style>
+</head>
+
+<body>
+
+<h1>MUST — Amputation-Adjusted Calculator</h1>
+<p>This tool estimates total body weight after amputation and calculates BMI, weight-loss percentage, and MUST score. Designed for mobile use on wards.</p>
+
+<label>Observed weight (kg)
+  <input id="obsWeight" type="number" step="0.1" min="0">
+</label>
+
+<label>Height (cm)
+  <input id="heightCm" type="number" step="0.1" min="0">
+</label>
+
+<label>Previous weight (kg) — optional
+  <input id="prevWeight" type="number" step="0.1" min="0" placeholder="Leave blank if unknown">
+</label>
+
 <label>Amputation level
   <select id="ampLevel">
-
     <option value="0">No amputation</option>
 
     <optgroup label="Upper Limb (Unilateral)">
@@ -32,6 +154,84 @@
       <option value="0.028">Bilateral feet (2.8%)</option>
       <option value="0.118">Bilateral below-knee + feet (11.8%)</option>
     </optgroup>
-
   </select>
 </label>
+
+<label>Acute disease effect (no nutrition >5 days?)
+  <select id="acute">
+    <option value="0">No</option>
+    <option value="2">Yes — score 2</option>
+  </select>
+</label>
+
+<button id="calc">Calculate MUST Score</button>
+
+<div id="out" class="result" style="display:none"></div>
+
+<div class="cite">
+  This calculator is a clinical aid. Always follow local policy and clinical judgement.
+</div>
+
+<script>
+function round1(n){ return Math.round(n*10)/10; }
+function mustScoreBMI(bmi){
+  if (bmi < 18.5) return 2;
+  if (bmi >= 18.5 && bmi < 20) return 1;
+  return 0;
+}
+function mustScoreWL(percent){
+  if (percent >= 10) return 2;
+  if (percent >= 5) return 1;
+  return 0;
+}
+document.getElementById('calc').addEventListener('click',()=>{
+  const obs = parseFloat(document.getElementById('obsWeight').value);
+  const hCm = parseFloat(document.getElementById('heightCm').value);
+  const prev = parseFloat(document.getElementById('prevWeight').value);
+  const P = parseFloat(document.getElementById('ampLevel').value);
+  const acute = parseFloat(document.getElementById('acute').value);
+
+  if (isNaN(obs) || obs<=0 || isNaN(hCm) || hCm<=0){
+    alert('Please enter valid weight and height.');
+    return;
+  }
+
+  const estWeight = obs / (1 - P);
+  const heightM = hCm/100;
+  const bmi = estWeight / (heightM * heightM);
+
+  let wlPercent = null;
+  if (!isNaN(prev) && prev > 0){
+    wlPercent = round1(((prev - estWeight) / prev) * 100);
+    if (wlPercent < 0) wlPercent = 0;
+  }
+
+  const bmiScore = mustScoreBMI(bmi);
+  const wlScore = wlPercent !== null ? mustScoreWL(wlPercent) : "N/A";
+
+  let totalScore = bmiScore + acute;
+  if (wlPercent !== null) totalScore += wlScore;
+
+  let risk = "";
+  if (isNaN(totalScore)) risk = "Incomplete (previous weight missing)";
+  else if (totalScore === 0) risk = "Low risk";
+  else if (totalScore === 1) risk = "Medium risk";
+  else risk = "High risk";
+
+  document.getElementById('out').style.display = 'block';
+  document.getElementById('out').innerHTML = `
+    <strong>Results</strong><br><br>
+    Estimated total weight: <strong>${round1(estWeight)} kg</strong><br>
+    BMI: <strong>${round1(bmi)}</strong> (score ${bmiScore})<br>
+    Weight loss %: <strong>${wlPercent === null ? "N/A" : wlPercent + "%"}</strong><br>
+    Weight-loss score: <strong>${wlScore}</strong><br>
+    Acute disease score: <strong>${acute}</strong><br>
+    <hr>
+    MUST total score: <strong>${isNaN(totalScore) ? "—" : totalScore}</strong><br>
+    Risk category: <strong>${risk}</strong>
+  `;
+});
+</script>
+
+</body>
+</html>
