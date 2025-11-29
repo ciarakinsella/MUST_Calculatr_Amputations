@@ -243,7 +243,7 @@ document.getElementById('calc').addEventListener('click',()=>{
   document.getElementById('out').style.display = 'block';
   document.getElementById('out').innerHTML = `
     <strong>Results</strong><br><br>
-    Estimated total weight: <strong>${round1(estWeight)} kg</strong><br>
+    Weight adjusted for amputation: <strong>${round1(estWeight)} kg</strong><br>
     BMI: <strong>${round1(bmi)}</strong> (score ${bmiScore})<br>
     Weight loss %: <strong>${wlPercent}%</strong>${weightAgeWarning}<br>
     Weight-loss score: <strong>${wlScore}</strong><br>
