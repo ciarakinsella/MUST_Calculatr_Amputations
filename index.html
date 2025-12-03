@@ -188,21 +188,34 @@ document.getElementById('calc').addEventListener('click',()=>{
 
   // Color-coded risk & action
   let riskText = "";
-  let actionText = "";
+  let actionHeader = "";
+  let actionSteps = [];
   if(totalScore === 0) {
     riskText = '<span class="risk-low">Low risk</span>';
-    actionText = `Routine clinical care — repeat MUST screening weekly.`;
+    actionHeader = 'Routine Clinical Care';
+    actionSteps = ['Repeat MUST screening weekly'];
   }
   else if(totalScore === 1) {
     riskText = '<span class="risk-medium">Medium risk</span>';
-    actionText = `Observe — Document dietary intake for 3 days<br>
-- If adequate: little concern, repeat screening weekly<br>
-- If inadequate: clinical concern — follow local policies, set goals, improve and increase nutritional intake, monitor and review care plan regularly`;
+    actionHeader = 'Observe';
+    actionSteps = [
+      'Document dietary intake for 3 days',
+      'If adequate: little concern, repeat screening weekly',
+      'If inadequate: clinical concern — follow local policies, set goals, improve and increase nutritional intake, monitor and review care plan regularly'
+    ];
   }
   else {
     riskText = '<span class="risk-high">High risk</span>';
-    actionText = `Treat — Refer to dietitian, set goals, improve and increase nutritional intake, monitor and review care plan weekly`;
+    actionHeader = 'Treat';
+    actionSteps = [
+      'Refer to dietitian',
+      'Set goals, improve and increase nutritional intake',
+      'Monitor and review care plan weekly'
+    ];
   }
+
+  // Convert steps array to HTML bullets
+  const actionStepsHTML = '<ul><li>' + actionSteps.join('</li><li>') + '</li></ul>';
 
   // Display results
   const outBox = document.getElementById('out');
@@ -225,7 +238,10 @@ document.getElementById('calc').addEventListener('click',()=>{
     <hr>
     <strong>Total MUST score:</strong> ${totalScore}<br>
     <strong>Risk category:</strong> ${riskText}<br><br>
-    <strong>Recommended action:</strong><br>${actionText}
+
+    <strong>Recommended action:</strong><br>
+    <strong>${actionHeader}</strong>
+    ${actionStepsHTML}
   `;
 
   // Scroll results into view
