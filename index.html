@@ -193,8 +193,10 @@ document.getElementById('calc').addEventListener('click',()=>{
   else if(totalScore === 1) riskText = '<span class="risk-medium">Medium risk</span>';
   else riskText = '<span class="risk-high">High risk</span>';
 
-  document.getElementById('out').style.display = 'block';
-  document.getElementById('out').innerHTML = `
+  // Display results
+  const outBox = document.getElementById('out');
+  outBox.style.display = 'block';
+  outBox.innerHTML = `
     <strong>Results</strong><br><br>
 
     <div class="step-title">Step 1 — BMI</div>
@@ -213,6 +215,9 @@ document.getElementById('calc').addEventListener('click',()=>{
     <strong>Total MUST score:</strong> ${totalScore}<br>
     <strong>Risk category:</strong> ${riskText}
   `;
+
+  // Scroll results into view
+  outBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
 });
 </script>
 
