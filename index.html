@@ -41,6 +41,12 @@ button:active{background:var(--accent-dark);}
 hr{margin:16px 0; border:0; border-top:2px solid var(--border);}
 .cite{margin-top:20px; font-size:0.85rem; color:#444;}
 .row{display:flex; gap:6px;}
+
+/* Risk color classes */
+.risk-low { color: #008000; font-weight: 700; }
+.risk-medium { color: #ff8c00; font-weight: 700; }
+.risk-high { color: #ff0000; font-weight: 700; }
+
 @media (max-width:500px){body{margin:16px;} h1{font-size:1.6rem;} .step-title{font-size:1.3rem;} button{font-size:1.1rem;} label{font-size:1.1rem;}}
 </style>
 </head>
@@ -181,10 +187,11 @@ document.getElementById('calc').addEventListener('click',()=>{
   const wlScore = mustScoreWL(wlPercent);
   const totalScore = bmiScore + wlScore + acute;
 
-  let risk = "";
-  if(totalScore === 0) risk="Low risk";
-  else if(totalScore === 1) risk="Medium risk";
-  else risk="High risk";
+  // Color-coded risk
+  let riskText = "";
+  if(totalScore === 0) riskText = '<span class="risk-low">Low risk</span>';
+  else if(totalScore === 1) riskText = '<span class="risk-medium">Medium risk</span>';
+  else riskText = '<span class="risk-high">High risk</span>';
 
   document.getElementById('out').style.display = 'block';
   document.getElementById('out').innerHTML = `
@@ -204,7 +211,7 @@ document.getElementById('calc').addEventListener('click',()=>{
 
     <hr>
     <strong>Total MUST score:</strong> ${totalScore}<br>
-    <strong>Risk category:</strong> ${risk}
+    <strong>Risk category:</strong> ${riskText}
   `;
 });
 </script>
