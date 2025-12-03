@@ -58,7 +58,7 @@ hr{margin:16px 0; border:0; border-top:2px solid var(--border);}
 <!-- STEP 1 -->
 <div class="step-title">Step 1 — BMI</div>
 <label>Observed weight (kg)<input id="obsWeight" type="number" step="0.1" min="0"></label>
-<label>Height (cm)<input id="heightCm" type="number" step="0.1" min="0"></label>
+<label>Height (m)<input id="heightM" type="number" step="0.01" min="0"></label>
 
 <label>Amputation level
 <select id="ampLevel">
@@ -153,7 +153,7 @@ function mustScoreWL(percent){
 
 document.getElementById('calc').addEventListener('click',()=>{
   const obs = parseFloat(document.getElementById('obsWeight').value);
-  const hCm = parseFloat(document.getElementById('heightCm').value);
+  const hM = parseFloat(document.getElementById('heightM').value);
   const prev = parseFloat(document.getElementById('prevWeight').value);
   const prevMonths = parseInt(document.getElementById('prevWeightMonths').value) || 0;
   const prevYears = parseInt(document.getElementById('prevWeightYears').value) || 0;
@@ -161,7 +161,7 @@ document.getElementById('calc').addEventListener('click',()=>{
   const P = parseFloat(document.getElementById('ampLevel').value);
   const acute = parseFloat(document.getElementById('acute').value);
 
-  if (isNaN(obs) || obs<=0 || isNaN(hCm) || hCm<=0){
+  if (isNaN(obs) || obs<=0 || isNaN(hM) || hM<=0){
     alert('Please enter valid observed weight and height.');
     return;
   }
@@ -172,10 +172,9 @@ document.getElementById('calc').addEventListener('click',()=>{
   }
 
   const estWeight = obs / (1 - P);
-  const heightM = hCm/100;
-  const bmi = estWeight / (heightM * heightM);
+  const bmi = estWeight / (hM * hM);
 
-  let wlPercent = round1(((prev - estWeight)/prev)*100);
+  let wlPercent = Math.round(((prev - estWeight)/prev)*1000)/10; 
   if (wlPercent < 0) wlPercent = 0;
 
   let weightAgeWarning = "";
@@ -187,11 +186,23 @@ document.getElementById('calc').addEventListener('click',()=>{
   const wlScore = mustScoreWL(wlPercent);
   const totalScore = bmiScore + wlScore + acute;
 
-  // Color-coded risk
+  // Color-coded risk & action
   let riskText = "";
-  if(totalScore === 0) riskText = '<span class="risk-low">Low risk</span>';
-  else if(totalScore === 1) riskText = '<span class="risk-medium">Medium risk</span>';
-  else riskText = '<span class="risk-high">High risk</span>';
+  let actionText = "";
+  if(totalScore === 0) {
+    riskText = '<span class="risk-low">Low risk</span>';
+    actionText = `Routine clinical care — repeat MUST screening weekly.`;
+  }
+  else if(totalScore === 1) {
+    riskText = '<span class="risk-medium">Medium risk</span>';
+    actionText = `Observe — Document dietary intake for 3 days<br>
+- If adequate: little concern, repeat screening weekly<br>
+- If inadequate: clinical concern — follow local policies, set goals, improve and increase nutritional intake, monitor and review care plan regularly`;
+  }
+  else {
+    riskText = '<span class="risk-high">High risk</span>';
+    actionText = `Treat — Refer to dietitian, set goals, improve and increase nutritional intake, monitor and review care plan weekly`;
+  }
 
   // Display results
   const outBox = document.getElementById('out');
@@ -200,8 +211,8 @@ document.getElementById('calc').addEventListener('click',()=>{
     <strong>Results</strong><br><br>
 
     <div class="step-title">Step 1 — BMI</div>
-    Observed weight adjusted for amputation: <strong>${round1(estWeight)} kg</strong><br>
-    BMI: <strong>${round1(bmi)}</strong> (score ${bmiScore})<br><br>
+    Observed weight adjusted for amputation: <strong>${Math.round(estWeight*10)/10} kg</strong><br>
+    BMI: <strong>${Math.round(bmi*10)/10}</strong> (score ${bmiScore})<br><br>
 
     <div class="step-title">Step 2 — Weight Loss</div>
     Previous weight: <strong>${prev} kg</strong><br>
@@ -213,7 +224,8 @@ document.getElementById('calc').addEventListener('click',()=>{
 
     <hr>
     <strong>Total MUST score:</strong> ${totalScore}<br>
-    <strong>Risk category:</strong> ${riskText}
+    <strong>Risk category:</strong> ${riskText}<br><br>
+    <strong>Recommended action:</strong><br>${actionText}
   `;
 
   // Scroll results into view
