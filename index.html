@@ -186,17 +186,25 @@ document.getElementById('calc').addEventListener('click',()=>{
   else if(totalScore === 1) risk="Medium risk";
   else risk="High risk";
 
-  document.getElementById('out').style.display='block';
+  document.getElementById('out').style.display = 'block';
   document.getElementById('out').innerHTML = `
     <strong>Results</strong><br><br>
-    Weight adjusted for amputation: <strong>${round1(estWeight)} kg</strong><br>
-    BMI: <strong>${round1(bmi)}</strong> (score ${bmiScore})<br>
+
+    <div class="step-title">Step 1 — BMI</div>
+    Observed weight adjusted for amputation: <strong>${round1(estWeight)} kg</strong><br>
+    BMI: <strong>${round1(bmi)}</strong> (score ${bmiScore})<br><br>
+
+    <div class="step-title">Step 2 — Weight Loss</div>
+    Previous weight: <strong>${prev} kg</strong><br>
     Weight loss %: <strong>${wlPercent}%</strong>${weightAgeWarning}<br>
-    Weight-loss score: <strong>${wlScore}</strong><br>
-    Acute disease score: <strong>${acute}</strong><br>
+    Weight-loss score: <strong>${wlScore}</strong><br><br>
+
+    <div class="step-title">Step 3 — Acute Disease Effect</div>
+    Acute disease score: <strong>${acute}</strong><br><br>
+
     <hr>
-    MUST total score: <strong>${totalScore}</strong><br>
-    Risk category: <strong>${risk}</strong>
+    <strong>Total MUST score:</strong> ${totalScore}<br>
+    <strong>Risk category:</strong> ${risk}
   `;
 });
 </script>
