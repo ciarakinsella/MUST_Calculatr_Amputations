@@ -35,10 +35,18 @@ h1 {
   color: var(--accent-dark);
 }
 
+.step-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-top: 26px;
+  margin-bottom: 4px;
+  color: var(--accent-dark);
+}
+
 label {
   display: block;
   font-weight: 600;
-  margin-top: 16px;
+  margin-top: 14px;
   font-size: var(--font-large);
 }
 
@@ -78,8 +86,24 @@ button:active {
   font-size: var(--font-large);
 }
 
-.result strong {
-  color: var(--accent-dark);
+.collapsible {
+  margin-top: 8px;
+  padding: 12px;
+  background: #eef1ff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.collapsible-content {
+  display: none;
+  padding: 12px;
+  margin-top: 6px;
+  background: #f7f8ff;
+  border-left: 3px solid var(--accent);
+  border-radius: 6px;
+  font-size: 0.95rem;
 }
 
 hr {
@@ -99,10 +123,10 @@ hr {
   gap: 6px;
 }
 
-/* Mobile readability tweaks */
 @media (max-width: 500px) {
   body { margin: 16px; }
   h1 { font-size: 1.6rem; }
+  .step-title { font-size: 1.3rem; }
   button { font-size: 1.1rem; }
   label { font-size: 1.1rem; }
 }
@@ -112,7 +136,9 @@ hr {
 <body>
 
 <h1>MUST — Amputation-Adjusted Calculator</h1>
-<p>Estimate total body weight, BMI, weight-loss %, and MUST score for patients with amputations. Mobile-friendly for ward use.</p>
+
+<!-- STEP 1 -->
+<div class="step-title">Step 1 — BMI</div>
 
 <label>Observed weight (kg)
   <input id="obsWeight" type="number" step="0.1" min="0">
@@ -121,18 +147,6 @@ hr {
 <label>Height (cm)
   <input id="heightCm" type="number" step="0.1" min="0">
 </label>
-
-<label>
-  Previous weight (kg) 
-  <span style="cursor:pointer;color:var(--accent);" title="Use weight from the last 3–6 months. Sources: old admission booklets, nursing re-assessment books, drug Kardex, or ask patient/family.">ℹ️</span>
-</label>
-<input id="prevWeight" type="number" step="0.1" min="0">
-
-<label>Time since previous weight</label>
-<div class="row">
-  <input id="prevWeightMonths" type="number" step="1" min="0" placeholder="Months" style="flex:1;">
-  <input id="prevWeightYears" type="number" step="1" min="0" placeholder="Years" style="flex:1;">
-</div>
 
 <label>Amputation level
   <select id="ampLevel">
@@ -170,6 +184,29 @@ hr {
   </select>
 </label>
 
+<!-- STEP 2 -->
+<div class="step-title">Step 2 — Weight Loss</div>
+
+<label>Previous weight (kg)
+  <input id="prevWeight" type="number" step="0.1" min="0">
+</label>
+
+<div class="collapsible" id="infoToggle">Where can previous weights be found?</div>
+<div class="collapsible-content" id="infoContent">
+  Old admission booklets, nursing re-assessment booklets, drug Kardex, 
+  patient’s bedside chart, previous discharge notes, or by asking the patient 
+  or family members for their best recollection.
+</div>
+
+<label>Time since previous weight</label>
+<div class="row">
+  <input id="prevWeightMonths" type="number" step="1" min="0" placeholder="Months" style="flex:1;">
+  <input id="prevWeightYears" type="number" step="1" min="0" placeholder="Years" style="flex:1;">
+</div>
+
+<!-- STEP 3 -->
+<div class="step-title">Step 3 — Acute Disease Effect</div>
+
 <label>Acute disease effect (no nutrition >5 days?)
   <select id="acute">
     <option value="0">No</option>
@@ -186,6 +223,13 @@ hr {
 </div>
 
 <script>
+// ---- Collapsible info card ----
+document.getElementById("infoToggle").addEventListener("click", function() {
+  const box = document.getElementById("infoContent");
+  box.style.display = box.style.display === "block" ? "none" : "block";
+});
+
+// ---- Calculator Logic ----
 function round1(n){ return Math.round(n*10)/10; }
 function mustScoreBMI(bmi){
   if (bmi < 18.5) return 2;
@@ -214,7 +258,7 @@ document.getElementById('calc').addEventListener('click',()=>{
   }
 
   if (isNaN(prev) || prev<=0){
-    alert('Please enter a valid previous weight. This is required for MUST calculation.');
+    alert('Please enter a valid previous weight.');
     return;
   }
 
@@ -232,7 +276,6 @@ document.getElementById('calc').addEventListener('click',()=>{
 
   const bmiScore = mustScoreBMI(bmi);
   const wlScore = mustScoreWL(wlPercent);
-
   const totalScore = bmiScore + wlScore + acute;
 
   let risk = "";
