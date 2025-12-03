@@ -29,107 +29,19 @@ body {
   padding-bottom: 40px;
 }
 
-h1 {
-  font-size: 1.8rem;
-  margin-bottom: 10px;
-  color: var(--accent-dark);
-}
-
-.step-title {
-  font-size: 1.4rem;
-  font-weight: 700;
-  margin-top: 26px;
-  margin-bottom: 4px;
-  color: var(--accent-dark);
-}
-
-label {
-  display: block;
-  font-weight: 600;
-  margin-top: 14px;
-  font-size: var(--font-large);
-}
-
-input, select {
-  padding: 14px;
-  margin-top: 6px;
-  width: 100%;
-  box-sizing: border-box;
-  font-size: var(--font-med);
-  border: 2px solid var(--border);
-  border-radius: 8px;
-}
-
-button {
-  margin-top: 18px;
-  padding: 16px;
-  font-size: 1.2rem;
-  font-weight: 600;
-  width: 100%;
-  background: var(--accent);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-button:active {
-  background: var(--accent-dark);
-}
-
-.result {
-  background: var(--card-bg);
-  padding: 18px;
-  margin-top: 20px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  font-size: var(--font-large);
-}
-
-.collapsible {
-  margin-top: 8px;
-  padding: 12px;
-  background: #eef1ff;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.collapsible-content {
-  display: none;
-  padding: 12px;
-  margin-top: 6px;
-  background: #f7f8ff;
-  border-left: 3px solid var(--accent);
-  border-radius: 6px;
-  font-size: 0.95rem;
-}
-
-hr {
-  margin: 16px 0;
-  border: 0;
-  border-top: 2px solid var(--border);
-}
-
-.cite {
-  margin-top: 20px;
-  font-size: 0.85rem;
-  color: #444;
-}
-
-.row {
-  display: flex;
-  gap: 6px;
-}
-
-@media (max-width: 500px) {
-  body { margin: 16px; }
-  h1 { font-size: 1.6rem; }
-  .step-title { font-size: 1.3rem; }
-  button { font-size: 1.1rem; }
-  label { font-size: 1.1rem; }
-}
+h1 { font-size: 1.8rem; margin-bottom:10px; color:var(--accent-dark);}
+.step-title { font-size:1.4rem; font-weight:700; margin-top:26px; margin-bottom:4px; color:var(--accent-dark);}
+label { display:block; font-weight:600; margin-top:14px; font-size:var(--font-large);}
+input, select { padding:14px; margin-top:6px; width:100%; box-sizing:border-box; font-size:var(--font-med); border:2px solid var(--border); border-radius:8px;}
+button { margin-top:18px; padding:16px; font-size:1.2rem; font-weight:600; width:100%; background:var(--accent); color:white; border:none; border-radius:8px; cursor:pointer;}
+button:active{background:var(--accent-dark);}
+.result{background:var(--card-bg); padding:18px; margin-top:20px; border-radius:10px; border:1px solid var(--border); font-size:var(--font-large);}
+.collapsible{margin-top:8px; padding:12px; background:#eef1ff; border:1px solid var(--border); border-radius:8px; cursor:pointer; font-weight:600;}
+.collapsible-content{display:none; padding:12px; margin-top:6px; background:#f7f8ff; border-left:3px solid var(--accent); border-radius:6px; font-size:0.95rem;}
+hr{margin:16px 0; border:0; border-top:2px solid var(--border);}
+.cite{margin-top:20px; font-size:0.85rem; color:#444;}
+.row{display:flex; gap:6px;}
+@media (max-width:500px){body{margin:16px;} h1{font-size:1.6rem;} .step-title{font-size:1.3rem;} button{font-size:1.1rem;} label{font-size:1.1rem;}}
 </style>
 </head>
 
@@ -139,63 +51,55 @@ hr {
 
 <!-- STEP 1 -->
 <div class="step-title">Step 1 — BMI</div>
-
-<label>Observed weight (kg)
-  <input id="obsWeight" type="number" step="0.1" min="0">
-</label>
-
-<label>Height (cm)
-  <input id="heightCm" type="number" step="0.1" min="0">
-</label>
+<label>Observed weight (kg)<input id="obsWeight" type="number" step="0.1" min="0"></label>
+<label>Height (cm)<input id="heightCm" type="number" step="0.1" min="0"></label>
 
 <label>Amputation level
-  <select id="ampLevel">
-    <option value="0">No amputation</option>
+<select id="ampLevel">
+<option value="0">No amputation</option>
 
-    <optgroup label="Upper Limb (Unilateral)">
-      <option value="0.049">Full upper limb (4.9%)</option>
-      <option value="0.027">Upper arm (2.7%)</option>
-      <option value="0.016">Forearm (1.6%)</option>
-      <option value="0.006">Hand (0.6%)</option>
-    </optgroup>
+<!-- LOWER LIMB UNILATERAL -->
+<optgroup label="Lower Limb (Unilateral)">
+  <option value="0.16">Full lower limb (16%)</option>
+  <option value="0.097">Above knee / thigh (9.7%)</option>
+  <option value="0.059">Below knee + foot (5.9%)</option>
+  <option value="0.014">Foot (1.4%)</option>
+  <option value="0.007">Half foot (0.7%)</option>
+</optgroup>
 
-    <optgroup label="Upper Limb (Bilateral)">
-      <option value="0.098">Bilateral full upper limbs (9.8%)</option>
-      <option value="0.054">Bilateral upper arms (5.4%)</option>
-      <option value="0.032">Bilateral forearms (3.2%)</option>
-      <option value="0.012">Bilateral hands (1.2%)</option>
-    </optgroup>
+<!-- LOWER LIMB BILATERAL -->
+<optgroup label="Lower Limb (Bilateral)">
+  <option value="0.32">Bilateral full lower limbs (32%)</option>
+  <option value="0.194">Bilateral above knee / thighs (19.4%)</option>
+  <option value="0.118">Bilateral below knee + foot (11.8%)</option>
+  <option value="0.028">Bilateral feet (2.8%)</option>
+  <option value="0.014">Bilateral half feet (1.4%)</option>
+</optgroup>
 
-    <optgroup label="Lower Limb (Unilateral)">
-      <option value="0.156">Full lower limb (15.6%)</option>
-      <option value="0.097">Above-knee / thigh (9.7%)</option>
-      <option value="0.045">Below-knee (4.5%)</option>
-      <option value="0.014">Foot (1.4%)</option>
-      <option value="0.059">Below-knee + foot (5.9%)</option>
-    </optgroup>
+<!-- UPPER LIMB UNILATERAL -->
+<optgroup label="Upper Limb (Unilateral)">
+  <option value="0.05">Full upper limb (5%)</option>
+  <option value="0.023">Forearm (2.3%)</option>
+  <option value="0.007">Hand (0.7%)</option>
+</optgroup>
 
-    <optgroup label="Lower Limb (Bilateral)">
-      <option value="0.312">Bilateral full lower limbs (31.2%)</option>
-      <option value="0.194">Bilateral above-knee / thighs (19.4%)</option>
-      <option value="0.090">Bilateral below-knee (9.0%)</option>
-      <option value="0.028">Bilateral feet (2.8%)</option>
-      <option value="0.118">Bilateral below-knee + feet (11.8%)</option>
-    </optgroup>
-  </select>
+<!-- UPPER LIMB BILATERAL -->
+<optgroup label="Upper Limb (Bilateral)">
+  <option value="0.10">Bilateral full upper limbs (10%)</option>
+  <option value="0.046">Bilateral forearms (4.6%)</option>
+  <option value="0.014">Bilateral hands (1.4%)</option>
+</optgroup>
+
+</select>
 </label>
 
 <!-- STEP 2 -->
 <div class="step-title">Step 2 — Weight Loss</div>
-
-<label>Previous weight (kg)
-  <input id="prevWeight" type="number" step="0.1" min="0">
-</label>
+<label>Previous weight (kg)<input id="prevWeight" type="number" step="0.1" min="0"></label>
 
 <div class="collapsible" id="infoToggle">Where can previous weights be found?</div>
 <div class="collapsible-content" id="infoContent">
-  Previous nursing admission or re-assessment booklets, drug kardexes, medical notes, 
-  handover from nursing/care home, or by asking the patient or family members for their 
-  best recollection.
+Previous nursing admission or re-assessment booklets, drug kardexes, medical notes, handover from nursing/care homes, or by asking the patient or family members for their best recollection.
 </div>
 
 <label>Time since previous weight</label>
@@ -206,12 +110,11 @@ hr {
 
 <!-- STEP 3 -->
 <div class="step-title">Step 3 — Acute Disease Effect</div>
-
 <label>Acute disease effect (no nutrition >5 days?)
-  <select id="acute">
-    <option value="0">No</option>
-    <option value="2">Yes — score 2</option>
-  </select>
+<select id="acute">
+  <option value="0">No</option>
+  <option value="2">Yes — score 2</option>
+</select>
 </label>
 
 <button id="calc">Calculate MUST Score</button>
@@ -219,17 +122,17 @@ hr {
 <div id="out" class="result" style="display:none"></div>
 
 <div class="cite">
-  This calculator is a clinical aid. Always follow local policy and clinical judgement.
+This calculator is a clinical aid. Always follow local policy and clinical judgement.
 </div>
 
 <script>
-// ---- Collapsible info card ----
+// Collapsible info card
 document.getElementById("infoToggle").addEventListener("click", function() {
   const box = document.getElementById("infoContent");
   box.style.display = box.style.display === "block" ? "none" : "block";
 });
 
-// ---- Calculator Logic ----
+// Calculator Logic
 function round1(n){ return Math.round(n*10)/10; }
 function mustScoreBMI(bmi){
   if (bmi < 18.5) return 2;
@@ -283,7 +186,7 @@ document.getElementById('calc').addEventListener('click',()=>{
   else if(totalScore === 1) risk="Medium risk";
   else risk="High risk";
 
-  document.getElementById('out').style.display = 'block';
+  document.getElementById('out').style.display='block';
   document.getElementById('out').innerHTML = `
     <strong>Results</strong><br><br>
     Weight adjusted for amputation: <strong>${round1(estWeight)} kg</strong><br>
