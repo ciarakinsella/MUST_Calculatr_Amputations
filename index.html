@@ -3,134 +3,204 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>MUST Calculator — Amputation-Adjusted</title>
+<title>MUST Calculator — Amputation Adjusted</title>
 
 <style>
 :root {
-  --bg: #ffffff;
-  --text: #111111;
-  --accent: #0057ff;
-  --accent-dark: #003bb8;
-  --card-bg: #f2f5ff;
-  --border: #d0d7ff;
-
-  --font-large: 1.15rem;
-  --font-med: 1.05rem;
+  --accent:#0057ff;
+  --accent-dark:#003bb8;
+  --border:#d0d7ff;
+  --card:#f2f5ff;
 }
 
 body {
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
-  margin: 22px;
-  max-width: 760px;
-  color: var(--text);
-  background: var(--bg);
-  font-size: var(--font-med);
-  line-height: 1.55;
-  padding-bottom: 40px;
+  margin:20px;
+  max-width:760px;
+  line-height:1.55;
 }
 
-h1 { font-size: 1.8rem; margin-bottom:10px; color:var(--accent-dark);}
-.step-title { font-size:1.4rem; font-weight:700; margin-top:26px; margin-bottom:4px; color:var(--accent-dark);}
-label { display:block; font-weight:600; margin-top:14px; font-size:var(--font-large);}
-input, select { padding:14px; margin-top:6px; width:100%; box-sizing:border-box; font-size:var(--font-med); border:2px solid var(--border); border-radius:8px;}
-button { margin-top:18px; padding:16px; font-size:1.2rem; font-weight:600; width:100%; background:var(--accent); color:white; border:none; border-radius:8px; cursor:pointer;}
-button:active{background:var(--accent-dark);}
-.result{background:var(--card-bg); padding:18px; margin-top:20px; border-radius:10px; border:1px solid var(--border); font-size:var(--font-large);}
-.collapsible{margin-top:8px; padding:12px; background:#eef1ff; border:1px solid var(--border); border-radius:8px; cursor:pointer; font-weight:600;}
-.collapsible-content{display:none; padding:12px; margin-top:6px; background:#f7f8ff; border-left:3px solid var(--accent); border-radius:6px; font-size:0.95rem;}
-hr{margin:16px 0; border:0; border-top:2px solid var(--border);}
-.cite{margin-top:20px; font-size:0.85rem; color:#444;}
-.row{display:flex; gap:6px;}
+h1 {
+  color:var(--accent-dark);
+  font-size:1.8rem;
+}
 
-/* Risk color classes */
-.risk-low { color: #008000; font-weight: 700; }
-.risk-medium { color: #ff8c00; font-weight: 700; }
-.risk-high { color: #ff0000; font-weight: 700; }
+.step-title {
+  margin-top:28px;
+  font-size:1.4rem;
+  font-weight:700;
+  color:var(--accent-dark);
+}
 
-@media (max-width:500px){body{margin:16px;} h1{font-size:1.6rem;} .step-title{font-size:1.3rem;} button{font-size:1.1rem;} label{font-size:1.1rem;}}
+label {
+  display:block;
+  margin-top:14px;
+  font-weight:600;
+}
+
+input, select {
+  width:100%;
+  padding:14px;
+  margin-top:6px;
+  font-size:1rem;
+  border:2px solid var(--border);
+  border-radius:8px;
+}
+
+button {
+  width:100%;
+  margin-top:22px;
+  padding:16px;
+  font-size:1.2rem;
+  font-weight:700;
+  background:var(--accent);
+  color:white;
+  border:none;
+  border-radius:8px;
+}
+
+button:active { background:var(--accent-dark); }
+
+.collapsible {
+  margin-top:10px;
+  padding:12px;
+  background:#eef1ff;
+  border:1px solid var(--border);
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.collapsible-content {
+  display:none;
+  margin-top:8px;
+  padding:12px;
+  background:#f7f8ff;
+  border-left:4px solid var(--accent);
+  border-radius:6px;
+}
+
+.result {
+  margin-top:24px;
+  padding:18px;
+  background:var(--card);
+  border-radius:10px;
+  border:1px solid var(--border);
+}
+
+.row {
+  display:flex;
+  gap:8px;
+}
+
+hr {
+  margin:16px 0;
+  border:0;
+  border-top:2px solid var(--border);
+}
+
+.risk-low { color:green; font-weight:700; }
+.risk-medium { color:#ff8c00; font-weight:700; }
+.risk-high { color:red; font-weight:700; }
+
+@media(max-width:500px){
+  body { margin:14px; }
+}
 </style>
 </head>
 
 <body>
 
-<h1>MUST — Amputation-Adjusted Calculator</h1>
+<h1>MUST – Amputation-Adjusted Calculator</h1>
 
 <!-- STEP 1 -->
 <div class="step-title">Step 1 — BMI</div>
 
-<label>Patient sex
-  <select id="sex">
-    <option value="male">Male</option>
-    <option value="female">Female</option>
-  </select>
-</label>
-
-<label>Ulna length (cm) <small>(optional if actual height unknown)</small>
-  <input id="ulnaLength" type="number" step="0.1" min="0">
-</label>
-
 <label>Height (m)
-  <input id="heightM" type="number" step="0.01" min="0" placeholder="Enter manually or use ulna">
+  <input id="heightM" type="number" step="0.01" placeholder="Enter measured height if available">
 </label>
 
-<label>Observed weight (kg)<input id="obsWeight" type="number" step="0.1" min="0"></label>
+<div class="collapsible" id="ulnaToggle">
+No accurate height available? Estimate height using ulna length
+</div>
+
+<div class="collapsible-content" id="ulnaContent">
+  <label>Patient sex
+    <select id="sex">
+      <option value="male">Male</option>
+      <option value="female">Female</option>
+    </select>
+  </label>
+
+  <label>Ulna length (cm)
+    <input id="ulnaLength" type="number" step="0.1">
+  </label>
+
+  <small>Height will be automatically estimated using BAPEN MUST guidance.</small>
+</div>
+
+<label>Observed weight (kg)
+  <input id="obsWeight" type="number" step="0.1">
+</label>
 
 <label>Amputation level
 <select id="ampLevel">
-<option value="0">No amputation</option>
+  <option value="0">No amputation</option>
 
-<!-- LOWER LIMB UNILATERAL -->
-<optgroup label="Lower Limb (Unilateral)">
-  <option value="0.16">Full lower limb (16%)</option>
-  <option value="0.097">Above knee / thigh (9.7%)</option>
-  <option value="0.059">Below knee + foot (5.9%)</option>
-  <option value="0.014">Foot (1.4%)</option>
-  <option value="0.007">Half foot (0.7%)</option>
-</optgroup>
+  <optgroup label="Lower Limb (Unilateral)">
+    <option value="0.16">Full lower limb (16%)</option>
+    <option value="0.097">Above knee / thigh (9.7%)</option>
+    <option value="0.059">Below knee + foot (5.9%)</option>
+    <option value="0.014">Foot (1.4%)</option>
+    <option value="0.007">Half foot (0.7%)</option>
+  </optgroup>
 
-<!-- LOWER LIMB BILATERAL -->
-<optgroup label="Lower Limb (Bilateral)">
-  <option value="0.32">Bilateral full lower limbs (32%)</option>
-  <option value="0.194">Bilateral above knee / thighs (19.4%)</option>
-  <option value="0.118">Bilateral below knee + foot (11.8%)</option>
-  <option value="0.028">Bilateral feet (2.8%)</option>
-  <option value="0.014">Bilateral half feet (1.4%)</option>
-</optgroup>
+  <optgroup label="Lower Limb (Bilateral)">
+    <option value="0.32">Bilateral full lower limbs (32%)</option>
+    <option value="0.194">Bilateral above knee / thighs (19.4%)</option>
+    <option value="0.118">Bilateral below knee + foot (11.8%)</option>
+    <option value="0.028">Bilateral feet (2.8%)</option>
+    <option value="0.014">Bilateral half feet (1.4%)</option>
+  </optgroup>
 
-<!-- UPPER LIMB UNILATERAL -->
-<optgroup label="Upper Limb (Unilateral)">
-  <option value="0.05">Full upper limb (5%)</option>
-  <option value="0.023">Forearm (2.3%)</option>
-  <option value="0.007">Hand (0.7%)</option>
-</optgroup>
+  <optgroup label="Upper Limb (Unilateral)">
+    <option value="0.05">Full upper limb (5%)</option>
+    <option value="0.023">Forearm (2.3%)</option>
+    <option value="0.007">Hand (0.7%)</option>
+  </optgroup>
 
-<!-- UPPER LIMB BILATERAL -->
-<optgroup label="Upper Limb (Bilateral)">
-  <option value="0.10">Bilateral full upper limbs (10%)</option>
-  <option value="0.046">Bilateral forearms (4.6%)</option>
-  <option value="0.014">Bilateral hands (1.4%)</option>
-</optgroup>
-
+  <optgroup label="Upper Limb (Bilateral)">
+    <option value="0.10">Bilateral full upper limbs (10%)</option>
+    <option value="0.046">Bilateral forearms (4.6%)</option>
+    <option value="0.014">Bilateral hands (1.4%)</option>
+  </optgroup>
 </select>
 </label>
 
 <!-- STEP 2 -->
 <div class="step-title">Step 2 — Weight Loss</div>
-<label>Previous weight (kg)<input id="prevWeight" type="number" step="0.1" min="0"></label>
 
-<div class="collapsible" id="infoToggle">Where can previous weights be found?</div>
+<label>Previous weight (kg)
+  <input id="prevWeight" type="number" step="0.1">
+</label>
+
+<div class="collapsible" id="infoToggle">
+Where can previous weights be found?
+</div>
+
 <div class="collapsible-content" id="infoContent">
 Previous nursing admission or re-assessment booklets, drug kardexes, medical notes, handover from nursing/care homes, or by asking the patient or family members for their best recollection.
 </div>
 
 <label>Time since previous weight</label>
 <div class="row">
-  <input id="prevWeightMonths" type="number" step="1" min="0" placeholder="Months" style="flex:1;">
-  <input id="prevWeightYears" type="number" step="1" min="0" placeholder="Years" style="flex:1;">
+  <input id="prevWeightMonths" type="number" placeholder="Months">
+  <input id="prevWeightYears" type="number" placeholder="Years">
 </div>
 
 <!-- STEP 3 -->
 <div class="step-title">Step 3 — Acute Disease Effect</div>
+
 <label>Acute disease effect (no nutrition >5 days?)
 <select id="acute">
   <option value="0">No</option>
@@ -142,139 +212,59 @@ Previous nursing admission or re-assessment booklets, drug kardexes, medical not
 
 <div id="out" class="result" style="display:none"></div>
 
-<div class="cite">
-This calculator is a clinical aid. Always follow local policy and clinical judgement.
-</div>
-
 <script>
-// Collapsible info card
-document.getElementById("infoToggle").addEventListener("click", function() {
-  const box = document.getElementById("infoContent");
-  box.style.display = box.style.display === "block" ? "none" : "block";
-});
+// Collapsibles
+document.getElementById("infoToggle").onclick = () =>
+  infoContent.style.display = infoContent.style.display==="block"?"none":"block";
+document.getElementById("ulnaToggle").onclick = () =>
+  ulnaContent.style.display = ulnaContent.style.display==="block"?"none":"block";
 
-// Calculator Logic
-function round1(n){ return Math.round(n*10)/10; }
-function mustScoreBMI(bmi){
-  if (bmi < 18.5) return 2;
-  if (bmi >= 18.5 && bmi < 20) return 1;
-  return 0;
-}
-function mustScoreWL(percent){
-  if (percent >= 10) return 2;
-  if (percent >= 5) return 1;
-  return 0;
-}
+// Scoring functions
+function bmiScore(b){ return b<18.5?2:b<20?1:0; }
+function wlScore(p){ return p>=10?2:p>=5?1:0; }
 
-document.getElementById('calc').addEventListener('click',()=>{
-  const obs = parseFloat(document.getElementById('obsWeight').value);
-  const prev = parseFloat(document.getElementById('prevWeight').value);
-  const prevMonths = parseInt(document.getElementById('prevWeightMonths').value) || 0;
-  const prevYears = parseInt(document.getElementById('prevWeightYears').value) || 0;
-  const totalMonths = prevYears*12 + prevMonths;
-  const P = parseFloat(document.getElementById('ampLevel').value);
-  const acute = parseFloat(document.getElementById('acute').value);
-  const ulna = parseFloat(document.getElementById('ulnaLength').value);
-  const sex = document.getElementById('sex').value;
-  let height = parseFloat(document.getElementById('heightM').value);
+// Calculator
+document.getElementById("calc").onclick = ()=>{
+  const obs=+obsWeight.value, prev=+prevWeight.value;
+  let height=+heightM.value;
+  const ulna=+ulnaLength.value, sex=sex.value;
+  const P=+ampLevel.value, acuteScore=+acute.value;
+  const months=(+prevWeightYears.value||0)*12+(+prevWeightMonths.value||0);
 
-  if (isNaN(obs) || obs<=0){
-    alert('Please enter valid observed weight.');
-    return;
+  if(ulna>0){
+    height=(sex==="male"?(3.26*ulna+65.53):(4.02*ulna+47.53))/100;
   }
-  if (isNaN(prev) || prev<=0){
-    alert('Please enter a valid previous weight.');
-    return;
-  }
+  if(!obs||!prev||!height){ alert("Please complete required fields"); return; }
 
-  // Estimate height from ulna if provided
-  if(!isNaN(ulna) && ulna > 0){
-    if(sex === 'male'){
-        height = (3.26 * ulna + 65.53) / 100; // cm → m
-    } else {
-        height = (4.02 * ulna + 47.53) / 100; // cm → m
-    }
-  }
+  const adjW=obs/(1-P);
+  const bmi=adjW/(height*height);
+  let wl=Math.max(0,Math.round(((prev-adjW)/prev)*1000)/10);
 
-  if(isNaN(height) || height <= 0){
-    alert('Please enter a valid height (m).');
-    return;
-  }
+  const total=bmiScore(bmi)+wlScore(wl)+acuteScore;
 
-  const estWeight = obs / (1 - P);
-  const bmi = estWeight / (height * height);
+  let risk,action,steps=[];
+  if(total===0){ risk="Low"; action="Routine Clinical Care"; steps=["Repeat MUST screening weekly"]; }
+  else if(total===1){ risk="Medium"; action="Observe"; steps=[
+    "Document dietary intake for 3 days",
+    "If adequate: repeat screening weekly",
+    "If inadequate: follow local policy, set goals, monitor regularly"
+  ]; }
+  else{ risk="High"; action="Treat"; steps=[
+    "Refer to dietitian",
+    "Improve and increase nutritional intake",
+    "Monitor and review weekly"
+  ]; }
 
-  let wlPercent = Math.round(((prev - estWeight)/prev)*1000)/10; 
-  if (wlPercent < 0) wlPercent = 0;
-
-  let weightAgeWarning = "";
-  if(totalMonths < 3 || totalMonths > 6){
-    weightAgeWarning = " ⚠️ Previous weight not within 3–6 months (MUST guideline). Use clinical judgment.";
-  }
-
-  const bmiScore = mustScoreBMI(bmi);
-  const wlScore = mustScoreWL(wlPercent);
-  const totalScore = bmiScore + wlScore + acute;
-
-  // Risk & action
-  let riskText = "";
-  let actionHeader = "";
-  let actionSteps = [];
-  if(totalScore === 0) {
-    riskText = '<span class="risk-low">Low risk</span>';
-    actionHeader = 'Routine Clinical Care';
-    actionSteps = ['Repeat MUST screening weekly'];
-  }
-  else if(totalScore === 1) {
-    riskText = '<span class="risk-medium">Medium risk</span>';
-    actionHeader = 'Observe';
-    actionSteps = [
-      'Document dietary intake for 3 days',
-      'If adequate: little concern, repeat screening weekly',
-      'If inadequate: clinical concern — follow local policies, set goals, improve and increase nutritional intake, monitor and review care plan regularly'
-    ];
-  }
-  else {
-    riskText = '<span class="risk-high">High risk</span>';
-    actionHeader = 'Treat';
-    actionSteps = [
-      'Refer to dietitian',
-      'Set goals, improve and increase nutritional intake',
-      'Monitor and review care plan weekly'
-    ];
-  }
-
-  const actionStepsHTML = '<ul><li>' + actionSteps.join('</li><li>') + '</li></ul>';
-
-  // Display results
-  const outBox = document.getElementById('out');
-  outBox.style.display = 'block';
-  outBox.innerHTML = `
-    <strong>Results</strong><br><br>
-
-    <div class="step-title">Step 1 — BMI</div>
-    Observed weight adjusted for amputation: <strong>${Math.round(estWeight*10)/10} kg</strong><br>
-    BMI: <strong>${Math.round(bmi*10)/10}</strong> (score ${bmiScore})<br><br>
-
-    <div class="step-title">Step 2 — Weight Loss</div>
-    Previous weight: <strong>${prev} kg</strong><br>
-    Weight loss %: <strong>${wlPercent}%</strong>${weightAgeWarning}<br>
-    Weight-loss score: <strong>${wlScore}</strong><br><br>
-
-    <div class="step-title">Step 3 — Acute Disease Effect</div>
-    Acute disease score: <strong>${acute}</strong><br><br>
-
-    <hr>
-    <strong>Total MUST score:</strong> ${totalScore}<br>
-    <strong>Risk category:</strong> ${riskText}<br><br>
-
-    <strong>Recommended action:</strong><br>
-    <strong>${actionHeader}</strong>
-    ${actionStepsHTML}
+  out.style.display="block";
+  out.innerHTML=`
+  <strong>Total MUST score:</strong> ${total}<br>
+  <strong>Risk:</strong> <span class="risk-${risk.toLowerCase()}">${risk}</span><br><br>
+  <strong>Recommended action:</strong><br>
+  <strong>${action}</strong>
+  <ul>${steps.map(s=>`<li>${s}</li>`).join("")}</ul>
   `;
-
-  outBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
-});
+  out.scrollIntoView({behavior:"smooth"});
+};
 </script>
 
 </body>
