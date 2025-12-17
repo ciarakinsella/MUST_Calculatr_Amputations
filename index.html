@@ -208,8 +208,29 @@ Previous nursing admission or re-assessment booklets, drug kardexes, medical not
   <input id="prevWeightYears" type="number" placeholder="Years">
 </div>
 
+<label>Previous amputation?</label>
+<select id="priorAmp">
+  <option value="0">None</option>
+  <option value="0.16">Unilateral full lower limb (16%)</option>
+  <option value="0.097">Unilateral above knee / thigh (9.7%)</option>
+  <option value="0.059">Unilateral below knee + foot (5.9%)</option>
+  <option value="0.014">Unilateral foot (1.4%)</option>
+  <option value="0.007">Unilateral half foot (0.7%)</option>
+  <option value="0.32">Bilateral full lower limbs (32%)</option>
+  <option value="0.194">Bilateral above knee / thighs (19.4%)</option>
+  <option value="0.118">Bilateral below knee + foot (11.8%)</option>
+  <option value="0.028">Bilateral feet (2.8%)</option>
+  <option value="0.014">Bilateral half feet (1.4%)</option>
+  <option value="0.05">Unilateral full upper limb (5%)</option>
+  <option value="0.023">Unilateral forearm (2.3%)</option>
+  <option value="0.007">Unilateral hand (0.7%)</option>
+  <option value="0.10">Bilateral full upper limbs (10%)</option>
+  <option value="0.046">Bilateral forearms (4.6%)</option>
+  <option value="0.014">Bilateral hands (1.4%)</option>
+</select>
+
 <!-- STEP 3 -->
-<div class="step-title">Step 3 — Acute Disease Effect</div>
+<div class="step-title">Step 3</div>
 
 <label>Patient is acutely ill <strong>and</strong> there has been or is likely to be no nutritional intake for &gt;5 days
 <select id="acute">
@@ -239,6 +260,7 @@ calc.onclick = ()=>{
   let height=+heightM.value;
   const ulna=+ulnaLength.value, sexVal=sex.value;
   const P=+ampLevel.value, acuteScore=+acute.value;
+  const priorP=+priorAmp.value;
 
   if(ulna>0){
     height=(sexVal==="male"?(3.26*ulna+65.53):(4.02*ulna+47.53))/100;
@@ -248,9 +270,15 @@ calc.onclick = ()=>{
     return;
   }
 
+  // Adjust weight for current amputation
   const adjW=obs/(1-P);
+
+  // Nutritional weight loss = previous weight minus weight expected after new amputation
+  const surgicalLoss = P - priorP;
+  const expectedWeightAfterSurgery = prev * (1 - surgicalLoss);
+  const wl=Math.max(0,Math.round(((expectedWeightAfterSurgery - adjW)/expectedWeightAfterSurgery)*1000)/10);
+
   const bmi=adjW/(height*height);
-  const wl=Math.max(0,Math.round(((prev-adjW)/prev)*1000)/10);
   const total=bmiScore(bmi)+wlScore(wl)+acuteScore;
 
   let risk,action,steps=[];
@@ -282,7 +310,7 @@ calc.onclick = ()=>{
     BMI: <strong>${bmi.toFixed(1)} kg/m²</strong> (score ${bmiScore(bmi)})<br><br>
 
     <div class="step-title">Step 2 — Weight Loss</div>
-    Weight loss: <strong>${wl}%</strong> (score ${wlScore(wl)})<br><br>
+    Weight loss (nutritional only): <strong>${wl}%</strong> (score ${wlScore(wl)})<br><br>
 
     <div class="step-title">Step 3 — Acute Disease Effect</div>
     Acute disease score: <strong>${acuteScore}</strong><br><br>
