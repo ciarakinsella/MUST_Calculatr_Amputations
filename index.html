@@ -242,4 +242,25 @@ calc.onclick = () => {
     action = "Treat";
     steps = [
       "Refer to dietitian",
-      "Improve
+      "Improve nutritional intake",
+      "Monitor and review weekly"
+    ];
+  }
+
+  out.style.display = "block";
+  out.innerHTML = `
+    <strong>Step 1 (BMI) score:</strong> ${step1}<br>
+    <strong>Step 2 (Weight loss) score:</strong> ${step2}<br>
+    <strong>Step 3 (Acute disease effect) score:</strong> ${step3}
+    <hr>
+    <strong>Total MUST score:</strong> ${total}
+    <hr>
+    <strong>Recommended action:</strong><br>
+    <strong>${action}</strong>
+    <ul>${steps.map(s => `<li>${s}</li>`).join("")}</ul>
+  `;
+};
+</script>
+
+</body>
+</html>
