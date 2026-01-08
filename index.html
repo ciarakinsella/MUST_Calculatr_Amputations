@@ -99,10 +99,6 @@ hr {
   border-top:2px solid var(--border);
 }
 
-.risk-low { color:green; font-weight:700; }
-.risk-medium { color:#ff8c00; font-weight:700; }
-.risk-high { color:red; font-weight:700; }
-
 @media(max-width:500px){
   body { margin:14px; }
 }
@@ -150,34 +146,9 @@ No accurate height available? Click here to estimate height using ulna length
 <label>Amputation level
 <select id="ampLevel">
   <option value="0">No amputation</option>
-
-  <optgroup label="Lower Limb (Unilateral)">
-    <option value="0.16">Full lower limb (16%)</option>
-    <option value="0.097">Above knee / thigh (9.7%)</option>
-    <option value="0.059">Below knee + foot (5.9%)</option>
-    <option value="0.014">Foot (1.4%)</option>
-    <option value="0.007">Half foot (0.7%)</option>
-  </optgroup>
-
-  <optgroup label="Lower Limb (Bilateral)">
-    <option value="0.32">Bilateral full lower limbs (32%)</option>
-    <option value="0.194">Bilateral above knee / thighs (19.4%)</option>
-    <option value="0.118">Bilateral below knee + foot (11.8%)</option>
-    <option value="0.028">Bilateral feet (2.8%)</option>
-    <option value="0.014">Bilateral half feet (1.4%)</option>
-  </optgroup>
-
-  <optgroup label="Upper Limb (Unilateral)">
-    <option value="0.05">Full upper limb (5%)</option>
-    <option value="0.023">Forearm (2.3%)</option>
-    <option value="0.007">Hand (0.7%)</option>
-  </optgroup>
-
-  <optgroup label="Upper Limb (Bilateral)">
-    <option value="0.10">Bilateral full upper limbs (10%)</option>
-    <option value="0.046">Bilateral forearms (4.6%)</option>
-    <option value="0.014">Bilateral hands (1.4%)</option>
-  </optgroup>
+  <option value="0.059">Below knee + foot (5.9%)</option>
+  <option value="0.097">Above knee / thigh (9.7%)</option>
+  <option value="0.16">Full lower limb (16%)</option>
 </select>
 </label>
 
@@ -193,7 +164,7 @@ Where can previous weights be found?
 </div>
 
 <div class="collapsible-content" id="infoContent">
-Previous nursing admission or re-assessment booklets, drug kardexes, medical notes, handover from nursing/care homes, or by asking the patient or family members for their best recollection.
+Previous nursing admission or re-assessment booklets, drug kardexes, medical notes, handover from nursing/care homes, or by asking the patient or family members.
 </div>
 
 <label>Time since previous/usual weight</label>
@@ -223,58 +194,52 @@ infoToggle.onclick = () =>
 ulnaToggle.onclick = () =>
   ulnaContent.style.display = ulnaContent.style.display==="block"?"none":"block";
 
-const bmiScore=b=>b<18.5?2:b<20?1:0;
-const wlScore=p=>p>=10?2:p>=5?1:0;
+const bmiScore = b => b < 18.5 ? 2 : b < 20 ? 1 : 0;
+const wlScore  = p => p >= 10 ? 2 : p >= 5 ? 1 : 0;
 
-calc.onclick = ()=>{
-  const obs=+obsWeight.value, prev=+prevWeight.value;
-  let height=+heightM.value;
-  const ulna=+ulnaLength.value, sexVal=sex.value;
-  const P=+ampLevel.value, acuteScore=+acute.value;
+calc.onclick = () => {
+  const obs = +obsWeight.value;
+  const prev = +prevWeight.value;
+  let height = +heightM.value;
+  const ulna = +ulnaLength.value;
+  const sexVal = sex.value;
+  const P = +ampLevel.value;
+  const acuteScore = +acute.value;
 
-  if(ulna>0){
-    height=(sexVal==="male"?(3.26*ulna+65.53):(4.02*ulna+47.53))/100;
+  if (ulna > 0) {
+    height = (sexVal === "male"
+      ? (3.26 * ulna + 65.53)
+      : (4.02 * ulna + 47.53)) / 100;
   }
-  if(!obs||!prev||!height){
+
+  if (!obs || !prev || !height) {
     alert("Please complete required fields");
     return;
   }
 
-  const adjW=obs/(1-P);
-  const bmi=adjW/(height*height);
-  const wl=Math.max(0,(((prev-adjW)/prev)*100).toFixed(1));
-  const total=bmiScore(bmi)+wlScore(wl)+acuteScore;
+  const adjWeight = obs / (1 - P);
+  const bmi = adjWeight / (height * height);
+  const wlPercent = Math.max(0, ((prev - adjWeight) / prev) * 100);
 
-  let risk,action,steps=[];
-  if(total===0){
-    risk="low"; action="Routine Clinical Care";
-    steps=["Repeat MUST screening weekly"];
-  } else if(total===1){
-    risk="medium"; action="Observe";
-    steps=[
+  const step1 = bmiScore(bmi);
+  const step2 = wlScore(wlPercent);
+  const step3 = acuteScore;
+
+  const total = step1 + step2 + step3;
+
+  let action, steps;
+  if (total === 0) {
+    action = "Routine Clinical Care";
+    steps = ["Repeat MUST screening weekly"];
+  } else if (total === 1) {
+    action = "Observe";
+    steps = [
       "Document dietary intake for 3 days",
       "If adequate: repeat screening weekly",
-      "If inadequate: follow local policy and monitor regularly"
+      "If inadequate: follow local policy"
     ];
   } else {
-    risk="high"; action="Treat";
-    steps=[
+    action = "Treat";
+    steps = [
       "Refer to dietitian",
-      "Improve nutritional intake",
-      "Monitor and review weekly"
-    ];
-  }
-
-  out.style.display="block";
-  out.innerHTML=`
-    <strong>Total MUST score:</strong> ${total}<br>
-    <strong>Risk:</strong> ${risk.toUpperCase()}<br><br>
-    <strong>Recommended action:</strong><br>
-    <strong>${action}</strong>
-    <ul>${steps.map(s=>`<li>${s}</li>`).join("")}</ul>
-  `;
-};
-</script>
-
-</body>
-</html>
+      "Improve
