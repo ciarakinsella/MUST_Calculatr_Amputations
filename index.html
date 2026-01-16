@@ -125,7 +125,7 @@ hr {
 <div class="step-title">Step 1 — BMI</div>
 
 <label>Height (m)
-  <input id="heightM" type="number" step="0.01">
+  <input id="heightM" type="number" step="0.01" placeholder="Measured height if available">
 </label>
 
 <div class="collapsible" id="ulnaToggle">
@@ -144,8 +144,13 @@ No accurate height available? Click here to estimate height using ulna length
     <input id="ulnaLength" type="number" step="0.1">
   </label>
 
-  <p style="margin-top:10px;font-size:0.95rem">
-    <a href="https://www.bapen.org.uk/pdfs/must/must_page6.pdf" target="_blank">
+  <small>
+    Height will be automatically estimated using BAPEN MUST guidance.
+  </small>
+
+  <p style="margin-top:10px; font-size:0.95rem;">
+    <a href="https://www.bapen.org.uk/pdfs/must/must_page6.pdf"
+       target="_blank" rel="noopener">
       View BAPEN guide: how to measure ulna length
     </a>
   </p>
@@ -155,13 +160,37 @@ No accurate height available? Click here to estimate height using ulna length
   <input id="obsWeight" type="number" step="0.1">
 </label>
 
-<label>Current amputation level
-<select id="ampCurrent">
+<label>Amputation level
+<select id="ampLevel">
   <option value="0">No amputation</option>
-  <option value="0.16">Unilateral lower limb (16%)</option>
-  <option value="0.32">Bilateral lower limbs (32%)</option>
-  <option value="0.05">Unilateral upper limb (5%)</option>
-  <option value="0.10">Bilateral upper limbs (10%)</option>
+
+  <optgroup label="Lower Limb (Unilateral)">
+    <option value="0.16">Full lower limb (16%)</option>
+    <option value="0.097">Above knee / thigh (9.7%)</option>
+    <option value="0.059">Below knee + foot (5.9%)</option>
+    <option value="0.014">Foot (1.4%)</option>
+    <option value="0.007">Half foot (0.7%)</option>
+  </optgroup>
+
+  <optgroup label="Lower Limb (Bilateral)">
+    <option value="0.32">Bilateral full lower limbs (32%)</option>
+    <option value="0.194">Bilateral above knee / thighs (19.4%)</option>
+    <option value="0.118">Bilateral below knee + foot (11.8%)</option>
+    <option value="0.028">Bilateral feet (2.8%)</option>
+    <option value="0.014">Bilateral half feet (1.4%)</option>
+  </optgroup>
+
+  <optgroup label="Upper Limb (Unilateral)">
+    <option value="0.05">Full upper limb (5%)</option>
+    <option value="0.023">Forearm (2.3%)</option>
+    <option value="0.007">Hand (0.7%)</option>
+  </optgroup>
+
+  <optgroup label="Upper Limb (Bilateral)">
+    <option value="0.10">Bilateral full upper limbs (10%)</option>
+    <option value="0.046">Bilateral forearms (4.6%)</option>
+    <option value="0.014">Bilateral hands (1.4%)</option>
+  </optgroup>
 </select>
 </label>
 
