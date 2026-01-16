@@ -201,17 +201,18 @@ No accurate height available? Click here to estimate height using ulna length
   <input id="prevWeight" type="number" step="0.1">
 </label>
 
-<label>Amputation present at time of previous/usual weight?
-<select id="ampPrevious">
-  <option value="same">Yes — same as current</option>
-  <option value="none">No amputation at that time</option>
-</select>
-</label>
+<div class="collapsible" id="infoToggle">
+Where can previous weights be found?
+</div>
+
+<div class="collapsible-content" id="infoContent">
+Previous nursing admission or re-assessment booklets, drug kardexes, medical notes, handover from nursing/care homes, or by asking the patient or family members for their best recollection.
+</div>
 
 <label>Time since previous/usual weight</label>
 <div class="row">
-  <input id="prevMonths" type="number" placeholder="Months">
-  <input id="prevYears" type="number" placeholder="Years">
+  <input id="prevWeightMonths" type="number" placeholder="Months">
+  <input id="prevWeightYears" type="number" placeholder="Years">
 </div>
 
 <!-- STEP 3 -->
