@@ -261,9 +261,9 @@ calc.onclick = () => {
   const Pprev = +ampPrevious.value;
   const acuteScore = +acute.value;
 
-  const prevMonths = +prevMonths.value || 0;
-  const prevYears = +prevYears.value || 0;
-  const totalMonths = prevMonths + prevYears * 12;
+  const prevMonthsVal = +document.getElementById("prevMonths").value || 0;
+  const prevYearsVal  = +document.getElementById("prevYears").value || 0;
+  const totalMonths = prevMonthsVal + prevYearsVal * 12;
 
   if(ulna>0){
     height = (sexVal==="male"? (3.26*ulna+65.53):(4.02*ulna+47.53))/100;
